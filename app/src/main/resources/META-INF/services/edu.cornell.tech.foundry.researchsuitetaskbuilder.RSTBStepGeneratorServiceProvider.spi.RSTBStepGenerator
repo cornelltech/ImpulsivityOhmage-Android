@@ -6,4 +6,5 @@ edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBTime
 edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBDatePickerStepGenerator
 edu.cornell.tech.foundry.behavioralextensionsrstb.GoNoGo.CTFGoNoGoStepGenerator
 edu.cornell.tech.foundry.behavioralextensionsrstb.BART.CTFBARTStepGenerator
+edu.cornell.tech.foundry.behavioralextensionsrstb.DelayDiscounting.CTFDelayDiscountingStepGenerator
 edu.cornell.tech.foundry.researchsuitetaskbuilder.DefaultStepGenerators.RSTBDefaultStepGenerator
