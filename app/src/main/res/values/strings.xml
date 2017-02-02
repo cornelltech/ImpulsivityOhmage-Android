@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ImpulsivityOhmage</string>
+    <string name="rstb_state_helper_path">/state_helper</string>
+    <string name="activities_filename">activities</string>
+    <string name="ctf_scheduled_activities">Scheduled Activities</string>
+    <string name="impulsivity_log_in">Log In</string>
+
+</resources>

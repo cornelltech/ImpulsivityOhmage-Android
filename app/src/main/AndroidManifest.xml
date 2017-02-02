@@ -1,0 +1,61 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.cornell.tech.foundry.impulsivityohmage">
+
+    <application
+        android:name="edu.cornell.tech.foundry.impulsivityohmage.ImpulsivityApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="edu.cornell.tech.foundry.impulsivityohmage.ImpulsivitySplashActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Impulsivity.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="org.researchstack.skin.ui.MainActivity"
+            android:theme="@style/Theme.Impulsivity.Main"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="edu.cornell.tech.foundry.impulsivityohmage.ImpulsivityOnboardingActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Impulsivity.Onboarding"
+            />
+
+        <activity
+            android:name="org.researchstack.backbone.ui.ViewTaskActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Impulsivity.Survey"
+            />
+
+        <activity
+            android:name="org.researchstack.skin.ui.ConsentTaskActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Impulsivity.Survey"
+            />
+
+        <activity
+            android:name="edu.cornell.tech.foundry.impulsivityohmage.ImpulsivitySettingsActivity"
+            android:label="@string/rss_settings"
+            android:theme="@style/Theme.Impulsivity.Settings"/>
+
+        <activity
+            android:name="org.researchstack.skin.ui.LearnActivity"
+            android:label="@string/rss_learn"/>
+
+
+    </application>
+
+</manifest>
