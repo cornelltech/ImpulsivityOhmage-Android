@@ -150,7 +150,9 @@ public class ImpulsivityActivitiesFragment extends Fragment implements StorageAc
 
             TaskResult taskResult = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
             StorageAccess.getInstance().getAppDatabase().saveTaskResult(taskResult);
-            DataProvider.getInstance().uploadTaskResult(getActivity(), taskResult);
+
+            ImpulsivityDataProvider dataProvider = (ImpulsivityDataProvider) DataProvider.getInstance();
+            dataProvider.processTaskResult(getActivity(), taskResult);
 
             setUpAdapter();
         }

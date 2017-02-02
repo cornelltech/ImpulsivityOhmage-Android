@@ -120,6 +120,14 @@ public class ImpulsivityDataProvider extends DataProvider {
     public void uploadTaskResult(Context context, TaskResult taskResult) {
 
         //
+        this.processTaskResult(context, taskResult);
+
+    }
+
+    public void processTaskResult(Context context, TaskResult taskResult) {
+
+        //TODO: send to task result processor
+
 
     }
 
