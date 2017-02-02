@@ -2,9 +2,12 @@ package edu.cornell.tech.foundry.impulsivityohmage;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.result.TaskResult;
+import org.researchstack.backbone.step.Step;
+import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 import org.researchstack.skin.DataProvider;
 import org.researchstack.skin.DataResponse;
@@ -17,12 +20,15 @@ import java.util.List;
 
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFSchedule;
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFScheduleItem;
+import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilder;
 import rx.Observable;
 
 /**
  * Created by jameskizer on 2/1/17.
  */
 public class ImpulsivityDataProvider extends DataProvider {
+
+    private static final String TAG = "ImpulsivityDataProvider";
 
     //TODO: Implement this
     @Override
@@ -126,7 +132,26 @@ public class ImpulsivityDataProvider extends DataProvider {
     //TODO: Integrate RSTB here!!!
 
     public Task loadRSTBTask(Context context, CTFScheduleItem scheduleItem) {
-        return null;
+
+        RSTBTaskBuilder taskBuilder = new RSTBTaskBuilder(
+                context,
+                ResourceManager.getInstance(),
+                ImpulsivityAppStateManager.getInstance());
+
+        List<Step> stepList = null;
+        try {
+            stepList = taskBuilder.stepsForElement(scheduleItem.activity);
+        }
+        catch(Exception e) {
+            Log.w(this.TAG, "could not create steps from task json", e);
+            return null;
+        }
+        if (stepList != null && stepList.size() > 0) {
+            return new OrderedTask(scheduleItem.identifier, stepList);
+        }
+        else {
+            return null;
+        }
     }
 
 
