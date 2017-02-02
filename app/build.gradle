@@ -71,5 +71,7 @@ dependencies {
     compile 'edu.cornell.tech.foundry:sdl_rsx:0.0.3-SNAPSHOT'
     compile 'tyrantgit:explosionfield:1.0.1'
     compile project(":researchsuitetaskbuilder")
+    compile project(":behavioralextensions")
+    compile project(":behavioralextensionsrstb")
 
 }

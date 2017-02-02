@@ -1,1 +1,1 @@
-include ':app', ':researchsuitetaskbuilder'
+include ':app', ':researchsuitetaskbuilder', ':behavioralextensions', ':behavioralextensionsrstb'
