@@ -72,5 +72,6 @@ dependencies {
     compile project(":researchsuitetaskbuilder")
     compile project(":behavioralextensions")
     compile project(":behavioralextensionsrstb")
+    compile project(":researchsuiteresultsprocessor")
 
 }

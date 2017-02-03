@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
+import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultTransform;
+
 /**
  * Created by jameskizer on 2/1/17.
  */
@@ -14,7 +16,7 @@ public class CTFScheduleItem {
     public String guid;
 
     public JsonObject activity;
-    public List<CTFResultTransform> resultTransforms;
+    public List<RSRPResultTransform> resultTransforms;
 
     public CTFScheduleItem() {
 
