@@ -40,7 +40,7 @@ public class RSRPFrontEndService {
         return service;
     }
 
-    public void processResult(TaskResult taskResult, List<RSRPResultTransform> resultTransforms) {
+    public List<RSRPIntermediateResult> processResult(TaskResult taskResult, List<RSRPResultTransform> resultTransforms) {
 
         List<RSRPIntermediateResult> intermediateResults = new ArrayList<>();
 
@@ -64,9 +64,7 @@ public class RSRPFrontEndService {
 
         }
 
-        for (RSRPIntermediateResult intermediateResult : intermediateResults) {
-            //TODO: ADD RESULTS BACKEND
-        }
+        return intermediateResults;
 
     }
 

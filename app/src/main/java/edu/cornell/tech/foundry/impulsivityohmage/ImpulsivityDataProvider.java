@@ -20,6 +20,7 @@ import java.util.List;
 
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFSchedule;
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFScheduleItem;
+import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultsProcessor;
 import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilder;
 import rx.Observable;
 
@@ -120,14 +121,21 @@ public class ImpulsivityDataProvider extends DataProvider {
     public void uploadTaskResult(Context context, TaskResult taskResult) {
 
         //
-        this.processTaskResult(context, taskResult);
+//        this.processTaskResult(context, taskResult);
 
     }
 
-    public void processTaskResult(Context context, TaskResult taskResult) {
+
+
+    public void processTaskResult(Context context, CTFScheduleItem scheduleItem, TaskResult taskResult) {
 
         //TODO: send to task result processor
 
+
+
+        RSRPResultsProcessor resultsProcessor = new RSRPResultsProcessor(context);
+
+        resultsProcessor.processResult(taskResult, scheduleItem.resultTransforms);
 
     }
 
@@ -136,6 +144,17 @@ public class ImpulsivityDataProvider extends DataProvider {
         return null;
     }
 
+    @Nullable
+    public CTFScheduleItem scheduleItemForTaskIdentifier(Context context, CTFSchedule schedule, String taskIdentifier) {
+
+        for (CTFScheduleItem scheduleItem : schedule.items) {
+
+            if (scheduleItem.identifier.equals(taskIdentifier)) {
+                return scheduleItem;
+            }
+        }
+        return null;
+    }
 
     //TODO: Integrate RSTB here!!!
 

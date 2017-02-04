@@ -13,11 +13,24 @@ public class RSRPIntermediateResult {
     private Date startDate;
     private Date endDate;
 
-    public RSRPIntermediateResult(String type, UUID uuid, Date startDate, Date endDate) {
-        this.type = type;
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public RSRPIntermediateResult(String type) {
+        this.type = type;
+        this.uuid = UUID.randomUUID();
+        this.startDate = new Date();
+        this.endDate = new Date();
+
     }
 
     public String getType() {
