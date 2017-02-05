@@ -28,7 +28,7 @@ public class ORBEOhmageResultBackEnd implements RSRPBackEnd {
         if (datapoint != null) {
             OhmageOMHManager.getInstance().addDatapoint(datapoint, new OhmageOMHManager.Completion() {
                 @Override
-                public void onCompletion(Error error) {
+                public void onCompletion(Exception e) {
 
                     //
 

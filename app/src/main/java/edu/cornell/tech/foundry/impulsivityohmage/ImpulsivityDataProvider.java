@@ -22,6 +22,7 @@ import java.util.List;
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFSchedule;
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFScheduleItem;
 import edu.cornell.tech.foundry.ohmageomhbackend.ORBEOhmageResultBackEnd;
+import edu.cornell.tech.foundry.ohmageomhsdk.OhmageOMHManager;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFakeFrontEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.spi.RSRPFrontEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultsProcessor;
@@ -43,6 +44,20 @@ public class ImpulsivityDataProvider extends DataProvider {
     @Override
     public Observable<DataResponse> initialize(Context context) {
 
+        OhmageOMHManager.config(
+                "https://ohmage.unicornucopia.org/dsu",
+                "edu.cornell.tech.foundry.ios.ResearchSuiteSDKExample",
+                "nzVlBVmrSHIrxr0SW9XdWp8yjtVov2NnVu7ezA7F"
+        );
+
+        OhmageOMHManager.getInstance().signIn("INFO5555Tester", "password123", new OhmageOMHManager.Completion() {
+            @Override
+            public void onCompletion(Exception e) {
+
+                //
+
+            }
+        });
 
         return Observable.defer(() -> {
             return Observable.just(new DataResponse(true, null));
