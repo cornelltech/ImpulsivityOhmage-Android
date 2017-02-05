@@ -37,5 +37,5 @@ public abstract class OMHDataPoint {
         }
     }
 
-    public abstract JsonObject toDict();
+    public abstract JsonObject toJson();
 }

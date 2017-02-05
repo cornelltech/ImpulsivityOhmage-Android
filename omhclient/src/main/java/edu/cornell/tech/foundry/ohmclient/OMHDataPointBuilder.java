@@ -74,6 +74,7 @@ public abstract class OMHDataPointBuilder extends OMHDataPoint {
         return returnObject;
     }
 
+    @Override
     public JsonObject toJson() {
         JsonObject returnObject = new JsonObject();
         returnObject.add("header", this.getHeader());
