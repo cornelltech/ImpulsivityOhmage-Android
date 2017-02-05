@@ -18,21 +18,17 @@ public class RSRPResultsProcessor {
 
     private static final String TAG = "RSTBTaskBuilder";
     private Context context;
-//    private RSRPFrontEndService frontEndService;
+    private RSRPBackEnd backEnd;
 
+    public RSRPResultsProcessor(RSRPBackEnd backEnd) {
+        this.backEnd = backEnd;
+    }
 
-//    public RSRPResultsProcessor(Context context, List<RSRPFrontEnd> frontEnds) {
-//        this.frontEndService = new RSRPFrontEndService(frontEnds);
-//    }
-
-//    public RSRPResultsProcessor(Context context, List<RSRPFrontEnd> frontEnds) {
-//        this.frontEndService = new RSRPFrontEndService(frontEnds);
-//    }
-
-    public void processResult(TaskResult taskResult, List<RSRPResultTransform> resultTransforms) {
-//        List<RSRPIntermediateResult> intermediateResults = this.frontEndService.processResult(taskResult, resultTransforms);
+    public void processResult(Context context, TaskResult taskResult, List<RSRPResultTransform> resultTransforms) {
         List<RSRPIntermediateResult> intermediateResults = RSRPFrontEndService.getInstance().processResult(taskResult, resultTransforms);
-
+        for (RSRPIntermediateResult intermediateResult : intermediateResults) {
+            this.backEnd.add(context, intermediateResult);
+        }
 
         Log.d(TAG, "Processed results");
 

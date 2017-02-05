@@ -1,1 +1,1 @@
-include ':app', ':researchsuitetaskbuilder', ':behavioralextensions', ':behavioralextensionsrstb', ':researchsuiteresultsprocessor', ':ohmageomhsdk', ':omhclient'
+include ':app', ':researchsuitetaskbuilder', ':behavioralextensions', ':behavioralextensionsrstb', ':researchsuiteresultsprocessor', ':ohmageomhsdk', ':omhclient', ':ohmageomhbackend'

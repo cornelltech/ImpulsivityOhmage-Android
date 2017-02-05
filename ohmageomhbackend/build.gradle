@@ -22,9 +22,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
-    compile project(":researchsuitetaskbuilder")
-    compile project(":researchsuiteresultsprocessor")
     compile project(":omhclient")
-    compile project(":behavioralextensions")
-    compile project(":ohmageomhbackend")
+    compile project(":researchsuiteresultsprocessor")
+    compile project(":ohmageomhsdk")
+
 }

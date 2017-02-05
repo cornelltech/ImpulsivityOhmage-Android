@@ -73,5 +73,6 @@ dependencies {
     compile project(":behavioralextensions")
     compile project(":behavioralextensionsrstb")
     compile project(":researchsuiteresultsprocessor")
+    compile project(":ohmageomhbackend")
 
 }

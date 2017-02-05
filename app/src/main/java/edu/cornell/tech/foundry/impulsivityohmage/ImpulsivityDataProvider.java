@@ -21,6 +21,7 @@ import java.util.List;
 
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFSchedule;
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFScheduleItem;
+import edu.cornell.tech.foundry.ohmageomhbackend.ORBEOhmageResultBackEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFakeFrontEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.spi.RSRPFrontEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultsProcessor;
@@ -138,9 +139,9 @@ public class ImpulsivityDataProvider extends DataProvider {
 
         //TODO: send to task result processor
 
-        RSRPResultsProcessor resultsProcessor = new RSRPResultsProcessor();
+        RSRPResultsProcessor resultsProcessor = new RSRPResultsProcessor(ORBEOhmageResultBackEnd.getInstance());
 
-        resultsProcessor.processResult(taskResult, scheduleItem.resultTransforms);
+        resultsProcessor.processResult(context, taskResult, scheduleItem.resultTransforms);
 
 
     }

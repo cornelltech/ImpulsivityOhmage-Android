@@ -29,23 +29,9 @@ public class RSRPFrontEndService {
     private static RSRPFrontEndService service;
     private ServiceLoader<RSRPFrontEnd> loader;
 
-//    private List<RSRPFrontEnd> frontEndObjects;
-
     private RSRPFrontEndService() {
         this.loader = ServiceLoader.load(RSRPFrontEnd.class);
     }
-//    private RSRPFrontEndService(List<RSRPFrontEnd> frontEnds) {
-//        this.loader = ServiceLoader.load(RSRPFrontEnd.class);
-//
-////        this.frontEndObjects = frontEnds;
-//
-//    }
-
-//    public static synchronized void config(List<RSRPFrontEnd> frontEnds) {
-//        if (service == null) {
-//            service = new RSRPFrontEndService(frontEnds);
-//        }
-//    }
 
     public static synchronized RSRPFrontEndService getInstance() {
         if (service == null) {
