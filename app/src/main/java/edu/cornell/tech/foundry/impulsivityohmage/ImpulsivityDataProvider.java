@@ -16,10 +16,13 @@ import org.researchstack.skin.model.SchedulesAndTasksModel;
 import org.researchstack.skin.model.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFSchedule;
 import edu.cornell.tech.foundry.impulsivityohmage.ScheduleModels.CTFScheduleItem;
+import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFakeFrontEnd;
+import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndServiceProvider.spi.RSRPFrontEnd;
 import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPResultsProcessor;
 import edu.cornell.tech.foundry.researchsuitetaskbuilder.RSTBTaskBuilder;
 import rx.Observable;
@@ -30,6 +33,10 @@ import rx.Observable;
 public class ImpulsivityDataProvider extends DataProvider {
 
     private static final String TAG = "ImpulsivityDataProvider";
+
+    private static List<RSRPFrontEnd> frontEnds = new ArrayList<>(Arrays.asList(
+            new RSRPFakeFrontEnd()
+    ));
 
     //TODO: Implement this
     @Override
@@ -131,7 +138,7 @@ public class ImpulsivityDataProvider extends DataProvider {
 
         //TODO: send to task result processor
 
-        RSRPResultsProcessor resultsProcessor = new RSRPResultsProcessor(context);
+        RSRPResultsProcessor resultsProcessor = new RSRPResultsProcessor();
 
         resultsProcessor.processResult(taskResult, scheduleItem.resultTransforms);
 

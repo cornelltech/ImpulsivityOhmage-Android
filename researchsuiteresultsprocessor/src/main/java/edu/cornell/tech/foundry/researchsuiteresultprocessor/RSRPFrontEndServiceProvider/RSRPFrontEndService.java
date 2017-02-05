@@ -29,9 +29,23 @@ public class RSRPFrontEndService {
     private static RSRPFrontEndService service;
     private ServiceLoader<RSRPFrontEnd> loader;
 
+//    private List<RSRPFrontEnd> frontEndObjects;
+
     private RSRPFrontEndService() {
         this.loader = ServiceLoader.load(RSRPFrontEnd.class);
     }
+//    private RSRPFrontEndService(List<RSRPFrontEnd> frontEnds) {
+//        this.loader = ServiceLoader.load(RSRPFrontEnd.class);
+//
+////        this.frontEndObjects = frontEnds;
+//
+//    }
+
+//    public static synchronized void config(List<RSRPFrontEnd> frontEnds) {
+//        if (service == null) {
+//            service = new RSRPFrontEndService(frontEnds);
+//        }
+//    }
 
     public static synchronized RSRPFrontEndService getInstance() {
         if (service == null) {
@@ -72,8 +86,11 @@ public class RSRPFrontEndService {
     private RSRPIntermediateResult transform(String type, Map<String,StepResult> parameters) {
 
         try {
-            Iterator<RSRPFrontEnd> frontEnds = loader.iterator();
-            while (parameters == null && frontEnds.hasNext()) {
+            Iterator<RSRPFrontEnd> frontEnds = this.loader.iterator();
+
+            boolean hasNext = frontEnds.hasNext();
+
+            while (parameters != null && frontEnds.hasNext()) {
                 RSRPFrontEnd frontEnd = frontEnds.next();
                 if (frontEnd.supportsType(type)) {
                     RSRPIntermediateResult intermediateResult = frontEnd.transform(parameters);
