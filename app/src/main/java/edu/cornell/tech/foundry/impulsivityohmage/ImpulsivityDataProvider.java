@@ -128,6 +128,10 @@ public class ImpulsivityDataProvider extends DataProvider {
 
         //TODO: send to task result processor
 
+        RSRPResultsProcessor resultsProcessor = new RSRPResultsProcessor(context);
+
+        resultsProcessor.processResult(taskResult, scheduleItem.resultTransforms);
+
 
     }
 
