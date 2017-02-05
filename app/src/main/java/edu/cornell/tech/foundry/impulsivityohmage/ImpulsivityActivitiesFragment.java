@@ -51,6 +51,7 @@ public class ImpulsivityActivitiesFragment extends Fragment implements StorageAc
     private List<CTFScheduleItem> visibleItems;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -81,17 +82,20 @@ public class ImpulsivityActivitiesFragment extends Fragment implements StorageAc
         }
     }
 
-    //protected
+    protected CTFSchedule getSchedule(Context context) {
 
-    protected List<CTFScheduleItem> getScheduledActivities(Context context, ImpulsivityDataProvider dataProvider) {
-
+        ImpulsivityDataProvider dataProvider = (ImpulsivityDataProvider) DataProvider.getInstance();
         // load from activities filename for now
         String scheduleFilename = context.getString(R.string.activities_filename);
 
-        CTFSchedule schedule = dataProvider.loadSchedule(context, scheduleFilename);
+        return dataProvider.loadSchedule(context, scheduleFilename);
 
+    }
+    //protected
 
-        return dataProvider.loadScheduledItemsForSchedule(context, schedule);
+    protected List<CTFScheduleItem> getScheduledActivities(Context context) {
+        ImpulsivityDataProvider dataProvider = (ImpulsivityDataProvider) DataProvider.getInstance();
+        return dataProvider.loadScheduledItemsForSchedule(context, this.getSchedule(context));
     }
 
     private void setUpAdapter()
@@ -106,9 +110,9 @@ public class ImpulsivityActivitiesFragment extends Fragment implements StorageAc
 
         Observable.create(subscriber -> {
 
-            ImpulsivityDataProvider dataProvider = (ImpulsivityDataProvider) DataProvider.getInstance();
 
-            List<CTFScheduleItem> scheduledItems = this.getScheduledActivities(getActivity(), dataProvider);
+
+            List<CTFScheduleItem> scheduledItems = this.getScheduledActivities(getActivity());
 
             subscriber.onNext(scheduledItems);
         })
@@ -141,6 +145,14 @@ public class ImpulsivityActivitiesFragment extends Fragment implements StorageAc
                 });
     }
 
+    @Nullable
+    private CTFScheduleItem scheduleItemForIdentifier(Context context, String identifier) {
+
+        ImpulsivityDataProvider dataProvider = (ImpulsivityDataProvider) DataProvider.getInstance();
+        return dataProvider.scheduleItemForTaskIdentifier(context, this.getSchedule(context), identifier);
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -152,7 +164,9 @@ public class ImpulsivityActivitiesFragment extends Fragment implements StorageAc
             StorageAccess.getInstance().getAppDatabase().saveTaskResult(taskResult);
 
             ImpulsivityDataProvider dataProvider = (ImpulsivityDataProvider) DataProvider.getInstance();
-            dataProvider.processTaskResult(getActivity(), taskResult);
+            dataProvider.processTaskResult(getActivity(),
+                    this.scheduleItemForIdentifier(getActivity(), taskResult.getIdentifier()),
+                    taskResult);
 
             setUpAdapter();
         }
