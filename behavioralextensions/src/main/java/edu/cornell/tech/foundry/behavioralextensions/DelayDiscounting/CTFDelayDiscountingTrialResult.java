@@ -15,9 +15,10 @@ public class CTFDelayDiscountingTrialResult implements Serializable {
     private CTFDelayDiscountingTrial trial;
     private Choice choiceType;
     private double choiceValue;
-    private long responseTime;
+    //time in seconds
+    private double responseTime;
 
-    public CTFDelayDiscountingTrialResult(CTFDelayDiscountingTrial trial, Choice choiceType, double choiceValue, long responseTime) {
+    public CTFDelayDiscountingTrialResult(CTFDelayDiscountingTrial trial, Choice choiceType, double choiceValue, double responseTime) {
         this.trial = trial;
         this.choiceType = choiceType;
         this.choiceValue = choiceValue;
@@ -36,7 +37,7 @@ public class CTFDelayDiscountingTrialResult implements Serializable {
         return choiceValue;
     }
 
-    public long getResponseTime() {
+    public double getResponseTime() {
         return responseTime;
     }
 }

@@ -4,9 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.cornell.tech.foundry.ohmclient.OMHAcquisitionProvenance;
 import edu.cornell.tech.foundry.ohmclient.OMHDataPointBuilder;
@@ -55,7 +62,15 @@ public class CTFDelayDiscountingRawOMHDatapoint extends OMHDataPointBuilder {
     }
 
     @Override
-    public JsonObject getBody() {
-        return null;
+    public JSONObject getBody() {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("variable_label", this.rawResult.getVariableLabel());
+        map.put("now_array", this.rawResult.getNowArray());
+        map.put("later_array", this.rawResult.getLaterArray());
+        map.put("choice_array", this.rawResult.getChoiceArray());
+        map.put("times", this.rawResult.getTimes());
+
+        return new JSONObject(map);
     }
 }

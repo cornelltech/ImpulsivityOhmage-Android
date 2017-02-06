@@ -2,7 +2,9 @@ package edu.cornell.tech.foundry.ohmclient;
 
 import android.support.annotation.Nullable;
 
-import com.google.gson.JsonObject;
+//import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,7 +16,7 @@ import java.util.Locale;
  */
 
 public abstract class OMHDataPoint {
-    public static final String           DATE_FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public static final String           DATE_FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
     public static final SimpleDateFormat ISO8601Formatter       = new SimpleDateFormat(OMHDataPoint.DATE_FORMAT_ISO_8601,
             Locale.getDefault());
 
@@ -37,5 +39,5 @@ public abstract class OMHDataPoint {
         }
     }
 
-    public abstract JsonObject toJson();
+    public abstract JSONObject toJson();
 }

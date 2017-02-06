@@ -2,11 +2,16 @@ package edu.cornell.tech.foundry.ohmclient;
 
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+//import com.google.gson.Gson;
+//import com.google.gson.JsonObject;
+//import com.google.gson.JsonPrimitive;
+
+
+import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jameskizer on 2/2/17.
@@ -20,65 +25,72 @@ public abstract class OMHDataPointBuilder extends OMHDataPoint {
     @Nullable
     public abstract OMHAcquisitionProvenance getAcquisitionProvenance();
 
-    public abstract JsonObject getBody();
+    public abstract JSONObject getBody();
 
-    public JsonObject getSchemaJson() {
+    public JSONObject getSchemaJson() {
         OMHSchema schema = this.getSchema();
-        JsonObject returnObject = new JsonObject();
-        returnObject.add("name", new JsonPrimitive(schema.getName()));
-        returnObject.add("namespace", new JsonPrimitive(schema.getNamespace()));
-        returnObject.add("version", new JsonPrimitive(schema.getVersion()));
-        return returnObject;
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("name", schema.getName());
+        map.put("namespace", schema.getNamespace());
+        map.put("version", schema.getVersion());
+
+        return new JSONObject(map);
     }
 
-    public JsonObject getAcquisitionProvenanceJson() {
+    public JSONObject getAcquisitionProvenanceJson() {
 
         OMHAcquisitionProvenance acquisitionProvenance = this.getAcquisitionProvenance();
 
         if (acquisitionProvenance != null) {
-            JsonObject returnObject = new JsonObject();
+            Map<String, Object> map = new HashMap<>();
 
             String sourceName = acquisitionProvenance.getSourceName();
             if (sourceName != null) {
-                returnObject.add("source_name", new JsonPrimitive(sourceName));
+                map.put("source_name", sourceName);
             }
 
             String sourceCreationDateTime = OMHDataPoint.stringFromDate(acquisitionProvenance.getSourceCreationDate());
             if (sourceCreationDateTime != null) {
-                returnObject.add("source_name", new JsonPrimitive(sourceCreationDateTime));
+                map.put("source_creation_date_time", sourceCreationDateTime);
             }
 
             String modality = acquisitionProvenance.getModalityString();
             if (modality != null) {
-                returnObject.add("modality", new JsonPrimitive(modality));
+                map.put("modality", modality);
             }
 
-            return returnObject;
+            return new JSONObject(map);
         }
         else {
             return null;
         }
     }
 
-    public JsonObject getHeader() {
-        JsonObject returnObject = new JsonObject();
-        returnObject.add("id", new JsonPrimitive(this.getDataPointID()));
-        returnObject.add("creation_date_time", new JsonPrimitive(OMHDataPoint.stringFromDate(this.getCreationDateTime())));
-        returnObject.add("schema_id", this.getSchemaJson());
+    public JSONObject getHeader() {
 
-        JsonObject acquisitionProvenance = this.getAcquisitionProvenanceJson();
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getDataPointID());
+        map.put("creation_date_time", OMHDataPoint.stringFromDate(this.getCreationDateTime()));
+        map.put("schema_id", this.getSchemaJson());
+
+        JSONObject acquisitionProvenance = this.getAcquisitionProvenanceJson();
         if (acquisitionProvenance != null) {
-            returnObject.add("acquisition_provenance", acquisitionProvenance);
+            map.put("acquisition_provenance", acquisitionProvenance);
         }
 
-        return returnObject;
+        return new JSONObject(map);
     }
 
     @Override
-    public JsonObject toJson() {
-        JsonObject returnObject = new JsonObject();
-        returnObject.add("header", this.getHeader());
-        returnObject.add("body", this.getBody());
-        return returnObject;
+    public JSONObject toJson() {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("header", this.getHeader());
+        map.put("body", this.getBody());
+
+        return new JSONObject(map);
+
     }
 }

@@ -3,14 +3,26 @@ package edu.cornell.tech.foundry.ohmclient;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientBadGateway;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientDataPointConflict;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientInvalidAccessToken;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientInvalidRefreshToken;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientMalformedResponse;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientOtherException;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientServerException;
+import edu.cornell.tech.foundry.ohmclient.Exception.OMHClientUnreachable;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -23,8 +35,14 @@ public class OMHClient {
 
     final static String TAG = OMHClient.class.getSimpleName();
 
-    public interface SignInCompletion {
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    public interface AuthCompletion {
         void onCompletion(OMHClientSignInResponse response, Exception e);
+    }
+
+    public interface PostSampleCompletion {
+        void onCompletion(boolean success, Exception e);
     }
 
     private final static OkHttpClient client = new OkHttpClient();
@@ -43,7 +61,7 @@ public class OMHClient {
         this.clientSecret = clientSecret;
     }
 
-    public void signIn(String username, String password, final SignInCompletion completion) {
+    public void signIn(String username, String password, final AuthCompletion completion) {
 
         RequestBody body = new FormBody.Builder()
                 .add("username", username)
@@ -57,17 +75,40 @@ public class OMHClient {
                 .post(body)
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(this.processAuthResponse(completion));
+    }
+
+    public void refreshAccessToken(String refreshToken, final AuthCompletion completion) {
+        RequestBody body = new FormBody.Builder()
+                .add("refresh_token", refreshToken)
+                .add("grant_type", "refresh_token")
+                .build();
+
+        Request request = new Request.Builder()
+                .header("Authorization", "Basic " + this.getBasicAuthString(this.clientID, this.clientSecret))
+                .url(this.baseURL + "/oauth/token")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(this.processAuthResponse(completion));
+    }
+
+    private Callback processAuthResponse(final AuthCompletion completion) {
+        return new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if (completion != null) {
-                    completion.onCompletion(null, e);
+                if (e instanceof UnknownHostException) {
+                    completion.onCompletion(null, new OMHClientUnreachable(e));
+                }
+                else {
+                    completion.onCompletion(null, new OMHClientOtherException(e));
                 }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response != null && response.isSuccessful()) {
+
+                if (response.isSuccessful()) {
 
                     String responseBody = "";
                     try {
@@ -86,12 +127,144 @@ public class OMHClient {
                         }
 
                     } catch (JSONException e) {
-                        Log.e(TAG, "Fail to parse response from omh-sign-in endpoint:" + responseBody, e);
-                        completion.onCompletion(null, e);
+//                        Log.e(TAG, "Fail to parse response from omh-sign-in endpoint:" + responseBody, e);
+                        completion.onCompletion(null, new OMHClientMalformedResponse(responseBody));
+                        return;
                     }
 
                 }
+                else {
+
+                    int responseCode = response.code();
+
+                    if (responseCode == 502) {
+                        completion.onCompletion(null, new OMHClientBadGateway());
+                        return;
+                    }
+                    else {
+                        String responseBody = "";
+                        try {
+                            responseBody = response.body().string();
+                            JSONObject responseJson = new JSONObject(responseBody);
+
+                            String error = responseJson.getString("error");
+                            String errorDescription = responseJson.getString("error_description");
+
+                            if (error != null && error.equals("invalid_grant")) {
+                                completion.onCompletion(null, new OMHClientInvalidRefreshToken());
+                            }
+                            else if (error != null && errorDescription != null){
+                                completion.onCompletion(null, new OMHClientServerException(error, errorDescription));
+                            }
+                            else {
+                                completion.onCompletion(null, new OMHClientMalformedResponse(responseBody));
+                            }
+
+                        } catch (JSONException e) {
+//                        Log.e(TAG, "Fail to parse response from omh-sign-in endpoint:" + responseBody, e);
+                            completion.onCompletion(null, new OMHClientMalformedResponse(responseBody));
+                            return;
+                        }
+                    }
+
+
+                }
+
+
             }
-        });
+        };
     }
+
+
+    public boolean validateSample(OMHDataPoint sample) {
+        return this.validateSampleJson(sample.toJson());
+    }
+
+    public boolean validateSampleJson(JSONObject sampleJson) {
+        try {
+            String sampleJsonString = sampleJson.toString();
+            JSONObject recodedJson = new JSONObject(sampleJsonString);
+            return true;
+        } catch (JSONException ex) {
+            return false;
+        }
+    }
+
+    public void postSample(JSONObject sampleJson, String accessToken, final PostSampleCompletion completion) {
+
+        this.postJSONSample(sampleJson, accessToken, completion);
+
+    }
+
+    private void postJSONSample(JSONObject sampleJson, String accessToken, final PostSampleCompletion completion) {
+
+        String jsonString = sampleJson.toString();
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        Request request = new Request.Builder()
+                .url(this.baseURL + "/dataPoints")
+                .header("Authorization", "Bearer " + accessToken)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(this.processJSONResponse(completion));
+    }
+
+    private Callback processJSONResponse(final PostSampleCompletion completion) {
+        return new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (e instanceof UnknownHostException) {
+                    completion.onCompletion(false, new OMHClientUnreachable(e));
+                }
+                else {
+                    completion.onCompletion(false, new OMHClientOtherException(e));
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                int responseCode = response.code();
+
+                if (response.isSuccessful() && responseCode == 201) {
+                    completion.onCompletion(true, null);
+                    return;
+                }
+                else if (responseCode == 409) {
+                    completion.onCompletion(false, new OMHClientDataPointConflict());
+                    return;
+                }
+                else if (responseCode == 502) {
+                    completion.onCompletion(false, new OMHClientBadGateway());
+                    return;
+                }
+                else {
+                    String responseBody = "";
+                    try {
+                        responseBody = response.body().string();
+                        JSONObject responseJson = new JSONObject(responseBody);
+
+                        String error = responseJson.getString("error");
+                        String errorMessage = responseJson.getString("error_message");
+
+                        if (error.equals("invalid_token")) {
+                            completion.onCompletion(false, new OMHClientInvalidAccessToken());
+                            return;
+                        }
+                        else {
+                            completion.onCompletion(false, new OMHClientMalformedResponse(responseBody));
+                            return;
+                        }
+
+                    } catch (JSONException e) {
+//                        Log.e(TAG, "Fail to parse response from omh-sign-in endpoint:" + responseBody, e);
+                        completion.onCompletion(false, new OMHClientMalformedResponse(responseBody));
+                        return;
+                    }
+                }
+
+            }
+        };
+    }
+
 }

@@ -14,7 +14,7 @@ public class CTFDelayDiscountingRaw extends RSRPIntermediateResult {
     private Double[] nowArray;
     private Double[] laterArray;
     private Double[] choiceArray;
-    private long[] times;
+    private Double[] times;
 
     public static String type = "DelayDiscountingRaw";
 
@@ -31,7 +31,7 @@ public class CTFDelayDiscountingRaw extends RSRPIntermediateResult {
         this.nowArray = new Double[trialResults.length];
         this.laterArray = new Double[trialResults.length];
         this.choiceArray = new Double[trialResults.length];
-        this.times = new long[trialResults.length];
+        this.times = new Double[trialResults.length];
 
         for(int i=0; i<trialResults.length; i++) {
             CTFDelayDiscountingTrialResult trialResult = trialResults[i];
@@ -42,5 +42,25 @@ public class CTFDelayDiscountingRaw extends RSRPIntermediateResult {
             this.times[i] = trialResult.getResponseTime();
          }
 
+    }
+
+    public String getVariableLabel() {
+        return variableLabel;
+    }
+
+    public Double[] getNowArray() {
+        return nowArray;
+    }
+
+    public Double[] getLaterArray() {
+        return laterArray;
+    }
+
+    public Double[] getChoiceArray() {
+        return choiceArray;
+    }
+
+    public Double[] getTimes() {
+        return times;
     }
 }

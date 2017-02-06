@@ -141,7 +141,8 @@ public class CTFDelayDiscountingStepLayout extends FrameLayout implements StepLa
     private void completeTrial(CTFDelayDiscountingTrialResult.Choice choice, CTFDelayDiscountingTrial trial, long startTime, DoTrialCompletion completion) {
 
         long endTime = SystemClock.elapsedRealtime();
-        long responseTime = endTime - startTime;
+        long responseTimeMS = (endTime - startTime);
+        double responseTimeSec = (double)responseTimeMS / 1000.0;
 
         double choiceValue = (choice == CTFDelayDiscountingTrialResult.Choice.NOW) ? trial.getNow() : trial.getLater();
 
@@ -149,7 +150,7 @@ public class CTFDelayDiscountingStepLayout extends FrameLayout implements StepLa
                 trial,
                 choice,
                 choiceValue,
-                responseTime
+                responseTimeSec
         );
 
         completion.completion(trialResult);
