@@ -8,10 +8,10 @@ import java.io.Serializable;
 public class CTFGoNoGoTrialResult implements Serializable {
 
     private CTFGoNoGoTrial trial;
-    private long responseTime;
+    private double responseTime;
     private boolean tapped;
 
-    public CTFGoNoGoTrialResult(CTFGoNoGoTrial trial, long responseTime, boolean tapped) {
+    public CTFGoNoGoTrialResult(CTFGoNoGoTrial trial, double responseTime, boolean tapped) {
         this.trial = trial;
         this.responseTime = responseTime;
         this.tapped = tapped;
@@ -21,7 +21,7 @@ public class CTFGoNoGoTrialResult implements Serializable {
         return trial;
     }
 
-    public long getResponseTime() {
+    public double getResponseTime() {
         return responseTime;
     }
 

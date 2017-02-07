@@ -295,7 +295,7 @@ public class CTFGoNoGoStepLayout extends FrameLayout implements StepLayout {
                                                     public void run() {
 
 
-                                                        CTFGoNoGoTrialResult result = new CTFGoNoGoTrialResult(trial, responseTime, tapped);
+                                                        CTFGoNoGoTrialResult result = new CTFGoNoGoTrialResult(trial, responseTime / 1000.0, tapped);
                                                         completion.completion(result);
 
 
