@@ -44,6 +44,13 @@ public class ImpulsivityDataProvider extends DataProvider {
     @Override
     public Observable<DataResponse> initialize(Context context) {
 
+        OhmageOMHManager.config(
+                context,
+                "https://ohmage.unicornucopia.org/dsu",
+                "edu.cornell.tech.foundry.ios.ResearchSuiteSDKExample",
+                "nzVlBVmrSHIrxr0SW9XdWp8yjtVov2NnVu7ezA7F",
+                ImpulsivityAppStateManager.getInstance()
+        );
 
 
 //        OhmageOMHManager.getInstance().signIn("INFO5555Tester", "password123", new OhmageOMHManager.Completion() {
