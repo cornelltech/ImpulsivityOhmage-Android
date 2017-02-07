@@ -23,7 +23,7 @@ public class ImpulsivityApplication extends Application {
         // Init RS Singleton
         //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-        ResearchStack.init(this, new ImpulsivityResearchStack());
+        ImpulsivityResearchStack.init(this, new ImpulsivityResearchStack());
 
         //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
         // Init permission objects

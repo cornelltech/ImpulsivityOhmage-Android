@@ -35,11 +35,13 @@ public class ImpulsivitySplashActivity extends PinCodeActivity {
                 .compose(ObservableUtils.applyDefault())
                 .subscribe(response -> {
 
-                    launchMainActivity();
 
+                    boolean skipped = AppPrefs.getInstance(this).skippedOnboarding();
+                    boolean signedIn =  DataProvider.getInstance().isSignedIn(this);
 
-                    if(AppPrefs.getInstance(this).isOnboardingComplete() ||
-                            DataProvider.getInstance().isSignedIn(this))
+                    //we want to show the main activity if we are logged in
+                    //or the user has skipped onboarding
+                    if(skipped || signedIn)
                     {
                         launchMainActivity();
                     }

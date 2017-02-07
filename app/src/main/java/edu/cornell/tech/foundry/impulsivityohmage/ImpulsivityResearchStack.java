@@ -21,10 +21,24 @@ import org.researchstack.skin.UiManager;
 import org.researchstack.skin.notification.NotificationConfig;
 import org.researchstack.skin.notification.SimpleNotificationConfig;
 
+import edu.cornell.tech.foundry.ohmageomhsdk.OhmageOMHManager;
+
 /**
  * Created by jameskizer on 2/1/17.
  */
 public class ImpulsivityResearchStack extends ResearchStack  {
+
+    public static void init(Context context, ResearchStack concreteResearchStack)
+    {
+        OhmageOMHManager.config(
+                "https://ohmage.unicornucopia.org/dsu",
+                "edu.cornell.tech.foundry.ios.ResearchSuiteSDKExample",
+                "nzVlBVmrSHIrxr0SW9XdWp8yjtVov2NnVu7ezA7F"
+        );
+
+        ResearchStack.init(context, concreteResearchStack);
+
+    }
 
     @Override
     protected AppDatabase createAppDatabaseImplementation(Context context)

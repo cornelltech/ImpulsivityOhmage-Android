@@ -47,7 +47,7 @@ public class OhmageOMHManager {
 
     }
 
-    private boolean isSignedIn() {
+    public boolean isSignedIn() {
         synchronized (this.credentialsLock) {
             return this.refreshToken != null && !this.refreshToken.isEmpty();
         }

@@ -44,20 +44,16 @@ public class ImpulsivityDataProvider extends DataProvider {
     @Override
     public Observable<DataResponse> initialize(Context context) {
 
-        OhmageOMHManager.config(
-                "https://ohmage.unicornucopia.org/dsu",
-                "edu.cornell.tech.foundry.ios.ResearchSuiteSDKExample",
-                "nzVlBVmrSHIrxr0SW9XdWp8yjtVov2NnVu7ezA7F"
-        );
 
-        OhmageOMHManager.getInstance().signIn("INFO5555Tester", "password123", new OhmageOMHManager.Completion() {
-            @Override
-            public void onCompletion(Exception e) {
 
-                //
-
-            }
-        });
+//        OhmageOMHManager.getInstance().signIn("INFO5555Tester", "password123", new OhmageOMHManager.Completion() {
+//            @Override
+//            public void onCompletion(Exception e) {
+//
+//                //
+//
+//            }
+//        });
 
         return Observable.defer(() -> {
             return Observable.just(new DataResponse(true, null));
@@ -91,7 +87,7 @@ public class ImpulsivityDataProvider extends DataProvider {
 
     @Override
     public boolean isSignedIn(Context context) {
-        return false;
+        return OhmageOMHManager.getInstance().isSignedIn();
     }
 
     @Override

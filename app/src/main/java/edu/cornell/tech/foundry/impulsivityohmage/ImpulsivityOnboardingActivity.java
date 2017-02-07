@@ -7,8 +7,10 @@ import android.widget.Button;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.answerformat.TextAnswerFormat;
+import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.result.TaskResult;
 import org.researchstack.backbone.step.QuestionStep;
+import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.ui.PinCodeActivity;
 import org.researchstack.backbone.ui.ViewTaskActivity;
@@ -18,14 +20,25 @@ import org.researchstack.skin.task.OnboardingTask;
 import org.researchstack.skin.ui.ConsentTaskActivity;
 import org.researchstack.skin.ui.MainActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.cornell.tech.foundry.ohmageomhsdkrs.CTFLogInStep;
+import edu.cornell.tech.foundry.ohmageomhsdkrs.CTFLogInStepLayout;
+import edu.cornell.tech.foundry.ohmageomhsdkrs.CTFOhmageLogInStepLayout;
+
 /**
  * Created by jameskizer on 2/1/17.
  */
 public class ImpulsivityOnboardingActivity extends PinCodeActivity {
 
     //    public static final int REQUEST_CODE_SIGN_UP  = 21473;
-//    public static final int REQUEST_CODE_SIGN_IN  = 31473;
-    public static final int REQUEST_CODE_PASSCODE = 41473;
+    public static final int REQUEST_CODE_SIGN_IN  = 31473;
+
+//    public static final int REQUEST_CODE_PASSCODE = 41473;
+
+    public static final String LOG_IN_STEP_IDENTIFIER = "login step identifier";
+    public static final String LOG_IN_TASK_IDENTIFIER = "login task identifier";
 
     private Button external_id;
 
@@ -58,10 +71,29 @@ public class ImpulsivityOnboardingActivity extends PinCodeActivity {
     public void logInClicked(View view)
     {
 //        hidePager();
+
+        //if we get here, we either are not logged in or we have not yet skipped
+        //need to show log in screen
+        //potentially also show passcode step
+
+        List<Step> logInSteps = new ArrayList<>();
+
+        CTFLogInStep logInStep = new CTFLogInStep(
+                ImpulsivityOnboardingActivity.LOG_IN_STEP_IDENTIFIER,
+                "Log In",
+                "Please log in",
+                CTFOhmageLogInStepLayout.class
+                );
+        logInStep.setForgotPasswordButtonTitle("Skip Log In");
+        logInStep.setOptional(false);
+
+        logInSteps.add(logInStep);
+
+
         boolean hasPasscode = StorageAccess.getInstance().hasPinCode(this);
         if(! hasPasscode)
         {
-            PassCodeCreationStep step = new PassCodeCreationStep(OnboardingTask.SignUpPassCodeCreationStepIdentifier,
+            PassCodeCreationStep passCodeStep = new PassCodeCreationStep(OnboardingTask.SignUpPassCodeCreationStepIdentifier,
                     org.researchstack.skin.R.string.rss_passcode);
 
 //            TextAnswerFormat answerFormat = new TextAnswerFormat();
@@ -73,14 +105,13 @@ public class ImpulsivityOnboardingActivity extends PinCodeActivity {
 //            ConfirmationStep cs = new ConfirmationStep("confirmExternalId", "Confirm Participant ID", confirmationFormat, "externalId");
 //            cs.setPlaceholder("Confirm Participant ID");
 
-            OrderedTask task = new OrderedTask("PasscodeTask", step);
-            startActivityForResult(ConsentTaskActivity.newIntent(this, task),
-                    REQUEST_CODE_PASSCODE);
+            logInSteps.add(passCodeStep);
+
         }
-        else
-        {
-            skipToMainActivity();
-        }
+
+        OrderedTask task = new OrderedTask(ImpulsivityOnboardingActivity.LOG_IN_TASK_IDENTIFIER, logInSteps);
+        startActivityForResult(ConsentTaskActivity.newIntent(this, task),
+                REQUEST_CODE_SIGN_IN);
     }
 
     private void skipToMainActivity()
@@ -109,12 +140,22 @@ public class ImpulsivityOnboardingActivity extends PinCodeActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(requestCode == REQUEST_CODE_PASSCODE && resultCode == RESULT_OK)
+        if(requestCode == REQUEST_CODE_SIGN_IN && resultCode == RESULT_OK)
         {
             TaskResult result = (TaskResult) data.getSerializableExtra(ViewTaskActivity.EXTRA_TASK_RESULT);
-            String passcode = (String) result.getStepResult(OnboardingTask.SignUpPassCodeCreationStepIdentifier)
-                    .getResult();
-            StorageAccess.getInstance().createPinCode(this, passcode);
+
+            StepResult passcodeResult = result.getStepResult(OnboardingTask.SignUpPassCodeCreationStepIdentifier);
+            if (passcodeResult != null) {
+                String passcode = (String)passcodeResult.getResult();
+                StorageAccess.getInstance().createPinCode(this, passcode);
+            }
+
+            Boolean isLoggedIn = (Boolean) result.getStepResult(ImpulsivityOnboardingActivity.LOG_IN_STEP_IDENTIFIER)
+                    .getResultForIdentifier(CTFLogInStepLayout.LoggedInResultIdentifier);
+
+            if(isLoggedIn.booleanValue()) {
+                AppPrefs.getInstance(this).setSkippedOnboarding(false);
+            }
 
             skipToMainActivity();
         }
