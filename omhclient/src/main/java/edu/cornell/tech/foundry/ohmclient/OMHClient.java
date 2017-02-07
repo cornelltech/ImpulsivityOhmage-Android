@@ -177,15 +177,19 @@ public class OMHClient {
 
 
     public boolean validateSample(OMHDataPoint sample) {
-        return this.validateSampleJson(sample.toJson());
+        boolean isValid = this.validateSampleJson(sample.toJson());
+        return isValid;
     }
 
     public boolean validateSampleJson(JSONObject sampleJson) {
         try {
             String sampleJsonString = sampleJson.toString();
+            Log.e(TAG, "validating json" + sampleJsonString);
             JSONObject recodedJson = new JSONObject(sampleJsonString);
             return true;
         } catch (JSONException ex) {
+            return false;
+        } catch (NullPointerException e) {
             return false;
         }
     }

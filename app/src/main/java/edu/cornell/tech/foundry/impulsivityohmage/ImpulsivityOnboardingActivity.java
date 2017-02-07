@@ -3,7 +3,7 @@ package edu.cornell.tech.foundry.impulsivityohmage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
 
 import org.researchstack.backbone.StorageAccess;
 import org.researchstack.backbone.answerformat.TextAnswerFormat;
@@ -41,7 +41,7 @@ public class ImpulsivityOnboardingActivity extends PinCodeActivity {
     public static final String LOG_IN_TASK_IDENTIFIER = "login task identifier";
     public static final String PASS_CODE_TASK_IDENTIFIER = "passcode task identifier";
 
-    private Button external_id;
+    private AppCompatButton log_in_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,13 @@ public class ImpulsivityOnboardingActivity extends PinCodeActivity {
         //load login screen here
         super.setContentView(R.layout.impulsivity_onboarding_activity);
 
-//        this.external_id = (Button) findViewById(R.id.external_id);
+        this.log_in_button = (AppCompatButton) findViewById(R.id.log_in_button);
+        this.log_in_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logInClicked(view);
+            }
+        });
 
 
     }

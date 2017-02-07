@@ -105,8 +105,8 @@ public class CTFBARTSummary extends RSRPIntermediateResult {
                 }
             }
 
-            this.meanPumpsAfterExplode = afterExplosion.getMean();
-            this.meanPumpsAfterNoExplode = afterNoExplosion.getMean();
+            this.meanPumpsAfterExplode = Double.isNaN(afterExplosion.getMean()) ? 0.0 : afterExplosion.getMean();
+            this.meanPumpsAfterNoExplode = Double.isNaN(afterNoExplosion.getMean()) ? 0.0 : afterNoExplosion.getMean();
 
             SummaryStats total = this.generateSummaryStatistics(trialResults);
             if (total != null) {
@@ -167,7 +167,7 @@ public class CTFBARTSummary extends RSRPIntermediateResult {
                 summary.addValue((double)trialResult.getNumPumps());
             }
 
-            pumpMean = summary.getMean();
+            pumpMean = Double.isNaN(summary.getMean()) ? 0.0 : summary.getMean() ;
 
             int pumpMin = Collections.min(pumpCounts).intValue();
             int pumpMax = Collections.max(pumpCounts).intValue();

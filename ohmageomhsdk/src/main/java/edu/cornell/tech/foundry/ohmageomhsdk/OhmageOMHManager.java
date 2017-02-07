@@ -3,6 +3,7 @@ package edu.cornell.tech.foundry.ohmageomhsdk;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import edu.cornell.tech.foundry.ohmageomhsdk.Exceptions.OhmageOMHAlreadySignedIn;
 import edu.cornell.tech.foundry.ohmageomhsdk.Exceptions.OhmageOMHException;
@@ -14,6 +15,8 @@ import edu.cornell.tech.foundry.ohmclient.OMHClientSignInResponse;
 import edu.cornell.tech.foundry.ohmclient.OMHDataPoint;
 
 public class OhmageOMHManager {
+
+    final static String TAG = OMHClient.class.getSimpleName();
 
     private static String ACCESS_TOKEN = "AccessToken";
     private static String REFRESH_TOKEN = "RefreshToken";
@@ -162,6 +165,8 @@ public class OhmageOMHManager {
         }
 
         if (!this.client.validateSample(datapoint)) {
+            Log.w(TAG, "Dropping datapoint, it looks like it's invalid: " + datapoint.toJson().toString());
+//            Log.w(TAG, datapoint);
             completion.onCompletion(new OhmageOMHInvalidSample());
             return;
         }
@@ -176,6 +181,7 @@ public class OhmageOMHManager {
             public void onCompletion(boolean success, Exception e) {
 
                 if (success) {
+                    Log.w(TAG, "Datapoint successfully uploaded");
                     completion.onCompletion(null);
                     return;
                 }

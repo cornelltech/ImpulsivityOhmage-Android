@@ -4,9 +4,8 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/external_id"
+        android:id="@+id/log_in_button"
         style="@style/Widget.Impulsivity.Onboarding.Button"
-        android:onClick="logInClicked"
         android:text="@string/impulsivity_log_in"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp" />

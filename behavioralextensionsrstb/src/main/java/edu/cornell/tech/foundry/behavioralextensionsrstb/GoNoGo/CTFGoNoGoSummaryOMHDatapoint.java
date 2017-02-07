@@ -62,9 +62,9 @@ public class CTFGoNoGoSummaryOMHDatapoint extends OMHDataPointBuilder {
 
         Map<String, Object> map = new HashMap<>();
         map.put("total", this.summaryResult.getTotalSummary().toJson());
-        map.put("firstThird", this.summaryResult.getTotalSummary().toJson());
-        map.put("middleThird", this.summaryResult.getTotalSummary().toJson());
-        map.put("lastThird", this.summaryResult.getTotalSummary().toJson());
+        map.put("firstThird", this.summaryResult.getFirstThirdSummary().toJson());
+        map.put("middleThird", this.summaryResult.getMiddleThirdSummary().toJson());
+        map.put("lastThird", this.summaryResult.getLastThirdSummary().toJson());
 
         return new JSONObject(map);
     }
