@@ -249,7 +249,7 @@ public class OMHClient {
                         JSONObject responseJson = new JSONObject(responseBody);
 
                         String error = responseJson.getString("error");
-                        String errorMessage = responseJson.getString("error_message");
+//                        String errorDescription = responseJson.getString("error_description");
 
                         if (error.equals("invalid_token")) {
                             completion.onCompletion(false, new OMHClientInvalidAccessToken());

@@ -16,7 +16,7 @@ import edu.cornell.tech.foundry.researchsuiteresultprocessor.RSRPFrontEndService
  */
 public class RSRPResultsProcessor {
 
-    private static final String TAG = "RSTBTaskBuilder";
+    private static final String TAG = "RSRPResultsProcessor";
     private Context context;
     private RSRPBackEnd backEnd;
 

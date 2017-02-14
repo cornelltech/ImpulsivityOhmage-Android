@@ -188,6 +188,7 @@ public class OhmageOMHManager {
 
                 if (e instanceof OMHClientInvalidAccessToken) {
 
+                    Log.w(TAG, "Refreshing token");
                     refreshThenAdd(datapoint, completion);
                     return;
 

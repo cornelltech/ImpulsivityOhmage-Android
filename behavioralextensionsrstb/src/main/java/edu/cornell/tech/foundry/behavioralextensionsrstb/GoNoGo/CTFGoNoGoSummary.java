@@ -90,7 +90,9 @@ public class CTFGoNoGoSummary extends RSRPIntermediateResult {
         int numberOfIncorrectResponses = incorrectResponses.size();
         int numberOfIncorrectNonresponses = incorrectNonresponses.size();
 
-        double meanAccuracy = (double) (numberOfCorrectResponses + numberOfCorrectNonresponses) / (double) numberOfTrials;
+        double meanAccuracy = numberOfTrials > 0 ?
+                (double) (numberOfCorrectResponses + numberOfCorrectNonresponses) / (double) numberOfTrials :
+                0.0;
 
         List<Double> responseTimes = new ArrayList<>();
 //        List<Double> correctResponseTimes = new ArrayList<>();
